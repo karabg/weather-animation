@@ -1,7 +1,7 @@
 import sys
 import random
-from PyQt6.QtWidgets import QApplication, QMainWindow, QMenu, QMessageBox
-from PyQt6.QtGui import QAction  # Update import
+from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PyQt6.QtGui import QAction
 from PyQt6.QtCore import QTimer, QPoint
 from PyQt6.QtGui import QPainter, QColor
 
@@ -24,14 +24,7 @@ class AnimationWindow(QMainWindow):
     def create_menu(self):
         menu_bar = self.menuBar()
 
-        # About menu
-        about_action = QAction("About", self)
-        about_action.triggered.connect(self.show_about)
-
-        about_menu = menu_bar.addMenu("About")
-        about_menu.addAction(about_action)
-
-        # Animation menu
+        # Weather menu
         animation_menu = menu_bar.addMenu("Weather")
         snow_action = QAction("Snow", self)
         snow_action.triggered.connect(self.start_snowing)
@@ -41,8 +34,23 @@ class AnimationWindow(QMainWindow):
         animation_menu.addAction(snow_action)
         animation_menu.addAction(rain_action)
 
+        # About menu
+        about_action = QAction("About", self)
+        about_action.triggered.connect(self.show_about)
+
+        about_menu = menu_bar.addMenu("About")
+        about_menu.addAction(about_action)
+
     def show_about(self):
-        QMessageBox.information(self, "About", "This project demonstrates weather animations with PyQt.")
+        about_text = (
+            "<b>Weather Animation</b><br><br>"
+            "<b>Creator:</b> Karen Abgaryan<br>"
+            "<b>Version:</b> 1.0<br>"
+            "<b>Last Update:</b> December 11, 2024<br><br>"
+            "This program demonstrates simple weather animations, including snow and rain, "
+            "using PyQt6. Choose an animation from the Weather menu to see it in action."
+        )
+        QMessageBox.information(self, "About", about_text)
 
     def start_snowing(self):
         self.animation_type = "snow"
@@ -71,6 +79,10 @@ class AnimationWindow(QMainWindow):
 
     def paintEvent(self, event):
         painter = QPainter(self)
+
+        # Draw sky background
+        painter.fillRect(self.rect(), QColor("skyblue"))
+
         if self.animation_type == "snow":
             painter.setBrush(QColor("white"))
             for flake in self.snowflakes:
